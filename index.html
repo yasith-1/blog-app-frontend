@@ -5,8 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dark Modern Blog</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Boostrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Boostrap Icon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <!-- custom style.css -->
     <link rel="stylesheet" href="./asset/css/style.css">
 </head>
 
@@ -120,10 +126,10 @@
                         <p class="lead mb-5 fs-4">Discover amazing stories in the darkness, share your thoughts,
                             and connect with a community of passionate night writers.</p>
                         <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
-                            <button class="btn btn-gradient btn-lg px-4 py-3" onclick="scrollToSection('posts')">
+                            <button class="btn btn-gradient px-4 py-3" onclick="scrollToSection('posts')">
                                 <i class="fas fa-arrow-down me-2"></i>Explore Posts
                             </button>
-                            <button class="btn btn-outline-light btn-lg px-4 py-3" data-bs-toggle="modal"
+                            <button class="btn btn-outline-light  px-4 py-3" data-bs-toggle="modal"
                                 data-bs-target="#addPostModal">
                                 <i class="fas fa-pen me-2"></i>Write Story
                             </button>
@@ -143,7 +149,7 @@
                     <h2 class="fw-bold fs-1 mb-3 mb-md-0">
                         <i class="fas fa-newspaper me-3 text-gradient"></i>Latest Posts
                     </h2>
-                    <button class="btn btn-gradient btn-lg d-none d-md-block" data-bs-toggle="modal"
+                    <button class="btn btn-gradient  d-none d-md-block" data-bs-toggle="modal"
                         data-bs-target="#addPostModal">
                         <i class="fas fa-plus me-2"></i>Add New Post
                     </button>
@@ -166,7 +172,7 @@
                         <i class="fas fa-blog fa-4x text-gradient mb-4"></i>
                         <h3 class="fw-bold mb-3">No Posts Yet</h3>
                         <p class="text-muted fs-5 mb-4">Be the first to create a blog post in the darkness!</p>
-                        <button class="btn btn-gradient btn-lg" data-bs-toggle="modal" data-bs-target="#addPostModal">
+                        <button class="btn btn-gradient" data-bs-toggle="modal" data-bs-target="#addPostModal">
                             <i class="fas fa-plus me-2"></i>Create First Post
                         </button>
                     </div>
@@ -175,12 +181,206 @@
         </div>
     </div>
 
+
+
+    <!-- sample card Content ----------------------------------------------------------------------------------------->
+    <div class="container-fluid px-lg-5 py-5" id="posts">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
+                    <h2 class="fw-bold fs-1 mb-3 mb-md-0">
+                        <i class="fas fa-newspaper me-3 text-gradient"></i>Latest Posts
+                    </h2>
+                    <button class="btn btn-gradient  d-none d-md-block" data-bs-toggle="modal"
+                        data-bs-target="#addPostModal">
+                        <i class="fas fa-plus me-2"></i>Add New Post
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample Blog Posts Container -->
+        <div class="row g-4" id="postsContainer">
+
+            <!-- Blog Post Card 4 -->
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="card blog-card h-100">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=200&fit=crop"
+                        class="blog-card-img" alt="Business Analytics">
+                    <div class="card-body">
+                        <div class="blog-meta">
+                            <span class="category-badge">Business</span>
+                            <small><i class="fas fa-calendar me-1"></i>May 27, 2025</small>
+                        </div>
+                        <h5 class="card-title">Data-Driven Decision Making</h5>
+                        <p class="card-text">Learn how successful companies leverage data analytics to make informed
+                            decisions and drive growth in today's competitive market landscape.</p>
+                        <div class="blog-meta">
+                            <small><i class="fas fa-user me-1"></i>Alex Rodriguez</small>
+                            <small><i class="fas fa-comments me-1"></i>15 comments</small>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between gap-2">
+                            <button class="btn btn-outline-info btn-sm flex-fill" onclick="viewPost(4)">
+                                <i class="fas fa-eye me-1"></i>View
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm flex-fill" onclick="updatePost(4)">
+                                <i class="fas fa-edit me-1"></i>Update
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm flex-fill" onclick="deletePost(4)">
+                                <i class="fas fa-trash me-1"></i>Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Post Card 5 -->
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="card blog-card h-100">
+                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=200&fit=crop"
+                        class="blog-card-img" alt="Gaming Setup">
+                    <div class="card-body">
+                        <div class="blog-meta">
+                            <span class="category-badge">Gaming</span>
+                            <small><i class="fas fa-calendar me-1"></i>May 26, 2025</small>
+                        </div>
+                        <h5 class="card-title">Ultimate Gaming Setup Guide</h5>
+                        <p class="card-text">Build the perfect gaming setup with our comprehensive guide covering
+                            hardware, peripherals, and optimization tips for maximum performance.</p>
+                        <div class="blog-meta">
+                            <small><i class="fas fa-user me-1"></i>Emma Thompson</small>
+                            <small><i class="fas fa-comments me-1"></i>41 comments</small>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between gap-2">
+                            <button class="btn btn-outline-info btn-sm flex-fill" onclick="viewPost(5)">
+                                <i class="fas fa-eye me-1"></i>View
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm flex-fill" onclick="updatePost(5)">
+                                <i class="fas fa-edit me-1"></i>Update
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm flex-fill" onclick="deletePost(5)">
+                                <i class="fas fa-trash me-1"></i>Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Post Card 6 -->
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="card blog-card h-100">
+                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=200&fit=crop"
+                        class="blog-card-img" alt="Fashion Trends">
+                    <div class="card-body">
+                        <div class="blog-meta">
+                            <span class="category-badge">Fashion</span>
+                            <small><i class="fas fa-calendar me-1"></i>May 25, 2025</small>
+                        </div>
+                        <h5 class="card-title">Summer Fashion Trends 2025</h5>
+                        <p class="card-text">Stay ahead of the fashion curve with the latest summer trends. From
+                            sustainable fabrics to bold color palettes, discover what's hot this season.</p>
+                        <div class="blog-meta">
+                            <small><i class="fas fa-user me-1"></i>Isabella Martinez</small>
+                            <small><i class="fas fa-comments me-1"></i>27 comments</small>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between gap-2">
+                            <button class="btn btn-outline-info btn-sm flex-fill" onclick="viewPost(6)">
+                                <i class="fas fa-eye me-1"></i>View
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm flex-fill" onclick="updatePost(6)">
+                                <i class="fas fa-edit me-1"></i>Update
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm flex-fill" onclick="deletePost(6)">
+                                <i class="fas fa-trash me-1"></i>Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Post Card 7 -->
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="card blog-card h-100">
+                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&h=200&fit=crop"
+                        class="blog-card-img" alt="Education Technology">
+                    <div class="card-body">
+                        <div class="blog-meta">
+                            <span class="category-badge">Education</span>
+                            <small><i class="fas fa-calendar me-1"></i>May 24, 2025</small>
+                        </div>
+                        <h5 class="card-title">Online Learning Revolution</h5>
+                        <p class="card-text">How digital education platforms are transforming the way we learn. Explore
+                            innovative teaching methods and the future of remote education.</p>
+                        <div class="blog-meta">
+                            <small><i class="fas fa-user me-1"></i>Prof. David Kim</small>
+                            <small><i class="fas fa-comments me-1"></i>19 comments</small>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between gap-2">
+                            <button class="btn btn-outline-info btn-sm flex-fill" onclick="viewPost(7)">
+                                <i class="fas fa-eye me-1"></i>View
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm flex-fill" onclick="updatePost(7)">
+                                <i class="fas fa-edit me-1"></i>Update
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm flex-fill" onclick="deletePost(7)">
+                                <i class="fas fa-trash me-1"></i>Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Post Card 8 -->
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="card blog-card h-100">
+                    <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=400&h=200&fit=crop"
+                        class="blog-card-img" alt="Cryptocurrency">
+                    <div class="card-body">
+                        <div class="blog-meta">
+                            <span class="category-badge">Finance</span>
+                            <small><i class="fas fa-calendar me-1"></i>May 23, 2025</small>
+                        </div>
+                        <h5 class="card-title">Cryptocurrency Market Analysis</h5>
+                        <p class="card-text">Understanding the volatile world of digital currencies. Market trends,
+                            investment strategies, and what the future holds for blockchain technology.</p>
+                        <div class="blog-meta">
+                            <small><i class="fas fa-user me-1"></i>Robert Johnson</small>
+                            <small><i class="fas fa-comments me-1"></i>36 comments</small>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between gap-2">
+                            <button class="btn btn-outline-info btn-sm flex-fill" onclick="viewPost(8)">
+                                <i class="fas fa-eye me-1"></i>View
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm flex-fill" onclick="updatePost(8)">
+                                <i class="fas fa-edit me-1"></i>Update
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm flex-fill" onclick="deletePost(8)">
+                                <i class="fas fa-trash me-1"></i>Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Add/Edit Post Modal -->
     <div class="modal fade" id="addPostModal" tabindex="-1" data-bs-backdrop="static">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold fs-4" id="modalTitle">
+                    <h5 class="modal-title fw-bold fs-5" id="modalTitle">
                         <i class="fas fa-pen me-2"></i>Add New Post
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -191,17 +391,39 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="postTitle" class="form-label fw-semibold">Title</label>
-                                <input type="text" class="form-control form-control-lg" id="postTitle" required>
+                                <input type="text" class="form-control " id="postTitle" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="postAuthor" class="form-label fw-semibold">Author</label>
-                                <input type="text" class="form-control form-control-lg" id="postAuthor" required>
+                                <input type="text" class="form-control " id="postAuthor" required>
                             </div>
-                            <div class="col-12">
+                            <div class="col-6">
                                 <label for="postContent" class="form-label fw-semibold">Content</label>
-                                <textarea class="form-control" id="postContent" rows="6" required
+                                <textarea class="form-control" id="postContent" rows="1" required
                                     placeholder="Write your amazing story..."></textarea>
                             </div>
+
+                            <div class="col-6">
+                                <label for="post-category" class="form-label fw-semibold">Category</label>
+                                <select class="form-select " id="post-category" required>
+                                    <option value="">Select Category</option>
+                                    <option value="technology">Technology</option>
+                                    <option value="lifestyle">Lifestyle</option>
+                                    <option value="travel">Travel</option>
+                                    <option value="food">Food</option>
+                                    <option value="sports">Sports</option>
+                                    <option value="entertainment">Entertainment</option>
+                                    <option value="business">Business</option>
+                                    <option value="health">Health</option>
+                                    <option value="education">Education</option>
+                                    <option value="finance">Finance</option>
+                                    <option value="fashion">Fashion</option>
+                                    <option value="gaming">Gaming</option>
+                                    <option value="news">News</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
                             <div class="col-12">
                                 <label for="postImage" class="form-label fw-semibold">Post Image (optional)</label>
                                 <div class="image-upload-area">
@@ -209,9 +431,9 @@
                                     <h6 class="mb-2">Click to upload image or drag & drop</h6>
                                     <small class="text-muted">Supports JPG, PNG, GIF (Max 5MB)</small>
                                 </div>
-                                <input type="file" id="postImageInput" accept="image/*" class="d-none">
-                                <div id="imagePreview" class="d-none mt-3">
-                                    <img id="previewImg" class="image-preview" alt="Preview">
+                                <input type="file" id="post-image-input" accept="image/*" class="d-none">
+                                <div id="image-preview" class="d-none mt-3">
+                                    <img id="preview-img" class="image-preview" alt="Preview">
                                     <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeImage()">
                                         <i class="fas fa-times me-1"></i>Remove Image
                                     </button>
@@ -225,8 +447,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-lg" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-gradient btn-lg" onclick="savePost()">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-gradient" id="save-post-btn">
                         <i class="fas fa-save me-2"></i>Save Post
                     </button>
                 </div>
@@ -250,7 +472,7 @@
                     <div class="blog-content fs-5" id="viewPostContent"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-lg" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -283,8 +505,18 @@
         </div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom.JS -->
     <script src="./asset/js/script.js"></script>
+
+    <!-- Boostrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+        crossorigin="anonymous"></script>
+
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </body>
 
 </html>
