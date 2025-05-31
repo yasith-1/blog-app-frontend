@@ -5,6 +5,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const imagePreview = document.getElementById('image-preview');
     const previewImg = document.getElementById('preview-img');
 
+    // Check if elements exist before adding event listeners
+    if (!fileInput || !uploadArea || !imagePreview || !previewImg) {
+        console.error('Required HTML elements not found');
+        return;
+    }
+
     // File input change event
     fileInput.addEventListener('change', handleFileSelect);
 
@@ -14,6 +20,12 @@ document.addEventListener('DOMContentLoaded', function () {
         fileInput.click();
     });
 
+    // Add missing dragover event (required for drop to work)
+    uploadArea.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#007bff';
+        uploadArea.style.background = 'rgba(0,123,255,0.1)';
+    });
 
     uploadArea.addEventListener('dragleave', function (e) {
         e.preventDefault();
@@ -28,7 +40,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const files = e.dataTransfer.files;
         if (files.length > 0) {
-            fileInput.files = files;
+            // Create a new FileList-like object
+            const dt = new DataTransfer();
+            dt.items.add(files[0]);
+            fileInput.files = dt.files;
             handleFileSelect({ target: { files: files } });
         }
     });
@@ -60,10 +75,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Update upload area text
                 uploadArea.innerHTML = `
-                            <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
-                            <h6 class="mb-1 text-success">Image Selected: ${file.name}</h6>
-                            <small class="text-light opacity-75">Click to change image</small>
-                        `;
+                    <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                    <h6 class="mb-1 text-success">Image Selected: ${file.name}</h6>
+                    <small class="text-light opacity-75">Click to change image</small>
+                `;
             };
             reader.readAsDataURL(file);
         }
@@ -76,6 +91,11 @@ function removeImage() {
     const previewImg = document.getElementById('preview-img');
     const uploadArea = document.querySelector('.image-upload-area');
 
+    if (!fileInput || !imagePreview || !previewImg || !uploadArea) {
+        console.error('Required elements not found for removeImage function');
+        return;
+    }
+
     // Reset file input
     fileInput.value = '';
 
@@ -85,75 +105,203 @@ function removeImage() {
 
     // Reset upload area content
     uploadArea.innerHTML = `
-                <i class="fas fa-cloud-upload-alt fa-3x text-light mb-3"></i>
-                <h6 class="mb-2">Click to upload image or drag & drop</h6>
-                <small class="text-light opacity-75">Supports JPG, PNG, GIF (Max 5MB)</small>
-            `;
+        <i class="fas fa-cloud-upload-alt fa-3x text-light mb-3"></i>
+        <h6 class="mb-2">Click to upload image or drag & drop</h6>
+        <small class="text-light opacity-75">Supports JPG, PNG, GIF (Max 5MB)</small>
+    `;
 }
 
 class CreateAlert {
     static showAlert(title, text, type) {
-        Swal.fire({
-            title: title,
-            text: text,
-            icon: type
-        });
+        // Check if SweetAlert2 is available
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: type
+            });
+        } else {
+            // Fallback to regular alert if SweetAlert2 is not available
+            alert(`${title}: ${text}`);
+        }
     }
 }
 
+// Function to save post
 function savePost() {
-    // Get values from form
-    // const postId = document.getElementById("postId").value.trim();
-    const title = document.getElementById("postTitle").value.trim();
-    const author = document.getElementById("postAuthor").value.trim();
-    const content = document.getElementById("postContent").value.trim();
-    const category = document.getElementById("post-category").value;
-    const comments = document.getElementById("postComments").value;
-    const imageFile = document.getElementById("post-image-input").files[0];
+    const titleElement = document.getElementById("postTitle");
+    const tagElement = document.getElementById("post-tag");
+    const contentElement = document.getElementById("postContent");
+    const categoryElement = document.getElementById("post-category");
+    const commentsElement = document.getElementById("postComments");
+    const imageFileInput = document.getElementById("post-image-input");
+    const imagePreview = document.getElementById("image-preview");
 
+    // Check if all required elements exist
+    if (!titleElement || !tagElement || !contentElement || !categoryElement || !commentsElement || !imageFileInput) {
+        console.error('Required form elements not found');
+        CreateAlert.showAlert("Error", "Form elements not found!", "error");
+        return;
+    }
 
+    const title = titleElement.value.trim();
+    const tag = tagElement.value.trim();
+    const content = contentElement.value.trim();
+    const category = categoryElement.value;
+    const comments = commentsElement.value;
+    const imageFile = imageFileInput.files[0];
 
-    // Basic validation
+    let imageUrl = "";
+    if (imageFile) {
+        imageUrl = URL.createObjectURL(imageFile);
+    }
+
+    // Validation
     if (!title) {
         CreateAlert.showAlert("Error", "Title is required!", "error");
         return;
-    }else if (!author) {
-        CreateAlert.showAlert("Error", "Author is required!", "error");
+    } else if (!tag) {
+        CreateAlert.showAlert("Error", "Tag is required!", "error");
         return;
-    }else if (!content) {
+    } else if (!content) {
         CreateAlert.showAlert("Error", "Content is required!", "error");
         return;
-    }else if (!category) {
+    } else if (!category) {
         CreateAlert.showAlert("Error", "Category must be selected!", "error");
         return;
-    }else if (comments < 0) {
+    } else if (comments && comments < 0) {
         CreateAlert.showAlert("Error", "Comments count cannot be negative!", "error");
         return;
-    }else if(!imageFile && document.getElementById("image-preview").classList.contains('d-none')) {
+    } else if (!imageFile && (!imagePreview || imagePreview.classList.contains('d-none'))) {
         CreateAlert.showAlert("Error", "Image is required!", "error");
         return;
-
-    }else if (imageFile && imageFile.size > 5 * 1024 * 1024) {
+    } else if (imageFile && imageFile.size > 5 * 1024 * 1024) {
         CreateAlert.showAlert("Error", "Image must be less than 5MB.", "error");
         return;
     }
 
     // Build post data object
     const postData = {
-        id: postId || null,
-        title: title,
-        author: author,
-        content: content,
-        category: category,
-        comments: parseInt(comments),
-        image: imageFile || null // optional
+        "id": null,
+        "title": title,
+        "content": content,
+        "tag": tag,
+        "category": category,
+        "commentCount": parseInt(comments) || 0,
+        "createdAt": null,
+        "updatedAt": null,
+        "imageUrl": imageUrl
     };
 
-    console.log("Collected Post Data:", postData);
+    // If you need to send the actual file to the server, use FormData instead:
+    // const formData = new FormData();
+    // formData.append('title', title);
+    // formData.append('content', content);
+    // formData.append('tag', tag);
+    // formData.append('category', category);
+    // formData.append('commentCount', parseInt(comments) || 0);
+    // if (imageFile) {
+    //     formData.append('image', imageFile);
+    // }
 
-    // You can now send this data via fetch/AJAX or process as needed
+    fetch("http://localhost:8080/blogpost/add-post", {
+        method: "POST",
+        body: JSON.stringify(postData),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    }).then(res => {
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+    }).then(finalRes => {
+        console.log("Server Response:", finalRes);
+        CreateAlert.showAlert("Success", "Post saved successfully!", "success");
+
+        // Optionally clear the form after successful save
+        clearForm();
+    }).catch(err => {
+        console.error("Error:", err);
+        CreateAlert.showAlert("Error", `Failed to save post: ${err.message}`, "error");
+    });
 }
 
+document.getElementById("save-post-btn").addEventListener("click", savePost);
 
-// Trigger savepost button click
-document.getElementById("save-post-btn").addEventListener('click',savePost);
+// Optional function to clear form after successful save
+function clearForm() {
+    document.getElementById("postTitle").value = '';
+    document.getElementById("post-tag").value = '';
+    document.getElementById("postContent").value = '';
+    document.getElementById("post-category").value = '';
+    document.getElementById("postComments").value = '';
+    removeImage();
+}
+
+//postContainer
+const postContainer = document.getElementById("postsContainer");
+
+function loadPosts() {
+    fetch("http://localhost:8080/blogpost/get-all").then(res => {
+        return res.json();
+    }).then(data => {
+        console.log("Data loaded:", data);
+
+        if (!Array.isArray(data) || data.length === 0) {
+            postsContainer.innerHTML = `<div class="col-12">
+                <div class="card text-center py-5">
+                    <div class="card-body">
+                        <i class="fas fa-blog fa-4x text-gradient mb-4"></i>
+                        <h3 class="fw-bold mb-3">No Posts Yet</h3>
+                        <p class="text-muted fs-5 mb-4">Be the first to create a blog post in the darkness!</p>
+                        <button class="btn btn-gradient" data-bs-toggle="modal" data-bs-target="#addPostModal">
+                            <i class="fas fa-plus me-2"></i>Create First Post
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+        } else {
+            data.forEach(dataset => {
+                postContainer.innerHTML += `<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="card blog-card h-100">
+                    <img src="${dataset.imageUrl}"
+                        class="blog-card-img" alt="Business Analytics">
+                    <div class="card-body">
+                        <div class="blog-meta">
+                            <span class="category-badge">${dataset.category}</span>
+                            <small><i class="fas fa-calendar me-1"></i>${dataset.createdAt}</small>
+                        </div>
+                        <h5 class="card-title">${dataset.title}</h5>
+                        <p class="card-text">${dataset.content}</p>
+                        <div class="blog-meta">
+                            <small><i class="fas fa-comments me-1"></i>${dataset.commentCount} comments</small>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between gap-2">
+                            <button class="btn btn-outline-info btn-sm flex-fill" onclick="viewPost(4)">
+                                <i class="fas fa-eye me-1"></i>View
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm flex-fill" onclick="updatePost(4)">
+                                <i class="fas fa-edit me-1"></i>Update
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm flex-fill" onclick="deletePost(4)">
+                                <i class="fas fa-trash me-1"></i>Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+            });
+        }
+
+
+    }).catch(err => {
+        console.error("Error loading data:", err);
+        CreateAlert.showAlert("Error", "Failed to load data from server.", "error");
+    });
+}
+
+// Loat data to database
+document.addEventListener('DOMContentLoaded', loadPosts);

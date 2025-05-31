@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dark Modern Blog</title>
+    <title>Modern Bolgger</title>
     <!-- Boostrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
@@ -23,7 +23,7 @@
             <!-- Brand -->
             <a class="navbar-brand d-flex align-items-center fw-bold" href="#">
                 <i class="fas fa-blog me-2 fs-4"></i>
-                <span class="fs-3">Dark Blog</span>
+                <span class="fs-3">Modern Bolgger</span>
             </a>
 
             <!-- Toggler -->
@@ -46,7 +46,7 @@
                             <i class="fas fa-newspaper me-2"></i>Posts
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link px-3 py-2 rounded-pill mx-1" href="#about">
                             <i class="fas fa-info-circle me-2"></i>About
                         </a>
@@ -55,7 +55,7 @@
                         <a class="nav-link px-3 py-2 rounded-pill mx-1" href="#contact">
                             <i class="fas fa-envelope me-2"></i>Contact
                         </a>
-                    </li>
+                    </li> -->
                     <li class="nav-item ms-lg-3">
                         <button class="btn btn-gradient btn-sm d-flex align-items-center mt-2 mt-lg-0"
                             data-bs-toggle="modal" data-bs-target="#addPostModal">
@@ -163,21 +163,10 @@
             <p class="text-light fs-5">Loading posts...</p>
         </div>
 
-        <!-- Blog Posts Container -->
+        <!-- Blog Posts Container in empy data-------------------------------------------->
         <div class="row g-4" id="postsContainer">
-            <!-- Default empty state -->
-            <div class="col-12">
-                <div class="card text-center py-5">
-                    <div class="card-body">
-                        <i class="fas fa-blog fa-4x text-gradient mb-4"></i>
-                        <h3 class="fw-bold mb-3">No Posts Yet</h3>
-                        <p class="text-muted fs-5 mb-4">Be the first to create a blog post in the darkness!</p>
-                        <button class="btn btn-gradient" data-bs-toggle="modal" data-bs-target="#addPostModal">
-                            <i class="fas fa-plus me-2"></i>Create First Post
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <!-- empty content load here-->
+            
         </div>
     </div>
 
@@ -185,7 +174,7 @@
 
     <!-- sample card Content ----------------------------------------------------------------------------------------->
     <div class="container-fluid px-lg-5 py-5" id="posts">
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-12">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
                     <h2 class="fw-bold fs-1 mb-3 mb-md-0">
@@ -197,180 +186,13 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Sample Blog Posts Container -->
         <div class="row g-4" id="postsContainer">
 
-            <!-- Blog Post Card 4 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-                <div class="card blog-card h-100">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=200&fit=crop"
-                        class="blog-card-img" alt="Business Analytics">
-                    <div class="card-body">
-                        <div class="blog-meta">
-                            <span class="category-badge">Business</span>
-                            <small><i class="fas fa-calendar me-1"></i>May 27, 2025</small>
-                        </div>
-                        <h5 class="card-title">Data-Driven Decision Making</h5>
-                        <p class="card-text">Learn how successful companies leverage data analytics to make informed
-                            decisions and drive growth in today's competitive market landscape.</p>
-                        <div class="blog-meta">
-                            <small><i class="fas fa-user me-1"></i>Alex Rodriguez</small>
-                            <small><i class="fas fa-comments me-1"></i>15 comments</small>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="d-flex justify-content-between gap-2">
-                            <button class="btn btn-outline-info btn-sm flex-fill" onclick="viewPost(4)">
-                                <i class="fas fa-eye me-1"></i>View
-                            </button>
-                            <button class="btn btn-outline-warning btn-sm flex-fill" onclick="updatePost(4)">
-                                <i class="fas fa-edit me-1"></i>Update
-                            </button>
-                            <button class="btn btn-outline-danger btn-sm flex-fill" onclick="deletePost(4)">
-                                <i class="fas fa-trash me-1"></i>Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Blog Post Card 5 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-                <div class="card blog-card h-100">
-                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=200&fit=crop"
-                        class="blog-card-img" alt="Gaming Setup">
-                    <div class="card-body">
-                        <div class="blog-meta">
-                            <span class="category-badge">Gaming</span>
-                            <small><i class="fas fa-calendar me-1"></i>May 26, 2025</small>
-                        </div>
-                        <h5 class="card-title">Ultimate Gaming Setup Guide</h5>
-                        <p class="card-text">Build the perfect gaming setup with our comprehensive guide covering
-                            hardware, peripherals, and optimization tips for maximum performance.</p>
-                        <div class="blog-meta">
-                            <small><i class="fas fa-user me-1"></i>Emma Thompson</small>
-                            <small><i class="fas fa-comments me-1"></i>41 comments</small>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="d-flex justify-content-between gap-2">
-                            <button class="btn btn-outline-info btn-sm flex-fill" onclick="viewPost(5)">
-                                <i class="fas fa-eye me-1"></i>View
-                            </button>
-                            <button class="btn btn-outline-warning btn-sm flex-fill" onclick="updatePost(5)">
-                                <i class="fas fa-edit me-1"></i>Update
-                            </button>
-                            <button class="btn btn-outline-danger btn-sm flex-fill" onclick="deletePost(5)">
-                                <i class="fas fa-trash me-1"></i>Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Blog Post Card 6 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-                <div class="card blog-card h-100">
-                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=200&fit=crop"
-                        class="blog-card-img" alt="Fashion Trends">
-                    <div class="card-body">
-                        <div class="blog-meta">
-                            <span class="category-badge">Fashion</span>
-                            <small><i class="fas fa-calendar me-1"></i>May 25, 2025</small>
-                        </div>
-                        <h5 class="card-title">Summer Fashion Trends 2025</h5>
-                        <p class="card-text">Stay ahead of the fashion curve with the latest summer trends. From
-                            sustainable fabrics to bold color palettes, discover what's hot this season.</p>
-                        <div class="blog-meta">
-                            <small><i class="fas fa-user me-1"></i>Isabella Martinez</small>
-                            <small><i class="fas fa-comments me-1"></i>27 comments</small>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="d-flex justify-content-between gap-2">
-                            <button class="btn btn-outline-info btn-sm flex-fill" onclick="viewPost(6)">
-                                <i class="fas fa-eye me-1"></i>View
-                            </button>
-                            <button class="btn btn-outline-warning btn-sm flex-fill" onclick="updatePost(6)">
-                                <i class="fas fa-edit me-1"></i>Update
-                            </button>
-                            <button class="btn btn-outline-danger btn-sm flex-fill" onclick="deletePost(6)">
-                                <i class="fas fa-trash me-1"></i>Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Blog Post Card 7 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-                <div class="card blog-card h-100">
-                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&h=200&fit=crop"
-                        class="blog-card-img" alt="Education Technology">
-                    <div class="card-body">
-                        <div class="blog-meta">
-                            <span class="category-badge">Education</span>
-                            <small><i class="fas fa-calendar me-1"></i>May 24, 2025</small>
-                        </div>
-                        <h5 class="card-title">Online Learning Revolution</h5>
-                        <p class="card-text">How digital education platforms are transforming the way we learn. Explore
-                            innovative teaching methods and the future of remote education.</p>
-                        <div class="blog-meta">
-                            <small><i class="fas fa-user me-1"></i>Prof. David Kim</small>
-                            <small><i class="fas fa-comments me-1"></i>19 comments</small>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="d-flex justify-content-between gap-2">
-                            <button class="btn btn-outline-info btn-sm flex-fill" onclick="viewPost(7)">
-                                <i class="fas fa-eye me-1"></i>View
-                            </button>
-                            <button class="btn btn-outline-warning btn-sm flex-fill" onclick="updatePost(7)">
-                                <i class="fas fa-edit me-1"></i>Update
-                            </button>
-                            <button class="btn btn-outline-danger btn-sm flex-fill" onclick="deletePost(7)">
-                                <i class="fas fa-trash me-1"></i>Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Blog Post Card 8 -->
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-                <div class="card blog-card h-100">
-                    <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=400&h=200&fit=crop"
-                        class="blog-card-img" alt="Cryptocurrency">
-                    <div class="card-body">
-                        <div class="blog-meta">
-                            <span class="category-badge">Finance</span>
-                            <small><i class="fas fa-calendar me-1"></i>May 23, 2025</small>
-                        </div>
-                        <h5 class="card-title">Cryptocurrency Market Analysis</h5>
-                        <p class="card-text">Understanding the volatile world of digital currencies. Market trends,
-                            investment strategies, and what the future holds for blockchain technology.</p>
-                        <div class="blog-meta">
-                            <small><i class="fas fa-user me-1"></i>Robert Johnson</small>
-                            <small><i class="fas fa-comments me-1"></i>36 comments</small>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="d-flex justify-content-between gap-2">
-                            <button class="btn btn-outline-info btn-sm flex-fill" onclick="viewPost(8)">
-                                <i class="fas fa-eye me-1"></i>View
-                            </button>
-                            <button class="btn btn-outline-warning btn-sm flex-fill" onclick="updatePost(8)">
-                                <i class="fas fa-edit me-1"></i>Update
-                            </button>
-                            <button class="btn btn-outline-danger btn-sm flex-fill" onclick="deletePost(8)">
-                                <i class="fas fa-trash me-1"></i>Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- Blog post load here -->
+            
         </div>
     </div>
 
@@ -393,14 +215,16 @@
                                 <label for="postTitle" class="form-label fw-semibold">Title</label>
                                 <input type="text" class="form-control " id="postTitle" required>
                             </div>
-                            <div class="col-md-6">
-                                <label for="postAuthor" class="form-label fw-semibold">Author</label>
-                                <input type="text" class="form-control " id="postAuthor" required>
-                            </div>
+                            
                             <div class="col-6">
                                 <label for="postContent" class="form-label fw-semibold">Content</label>
                                 <textarea class="form-control" id="postContent" rows="1" required
                                     placeholder="Write your amazing story..."></textarea>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="post-tag" class="form-label fw-semibold">Tag</label>
+                                <input type="text" class="form-control " id="post-tag" required>
                             </div>
 
                             <div class="col-6">
