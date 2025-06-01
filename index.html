@@ -230,7 +230,7 @@
                             <div class="col-6">
                                 <label for="post-category" class="form-label fw-semibold">Category</label>
                                 <select class="form-select " id="post-category" required>
-                                    <option value="" >Select Category</option>
+                                    <option value="">Select Category</option>
                                     <option value="technology">Technology</option>
                                     <option value="programming">Programming</option>
                                     <option value="lifestyle">Lifestyle</option>
@@ -282,7 +282,7 @@
     </div>
 
     <!-- Update post model -->
-     <div class="modal fade" id="updatePostModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal fade" id="updatePostModal" tabindex="-1" data-bs-backdrop="static">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -314,7 +314,7 @@
                             <div class="col-6">
                                 <label for="post-category" class="form-label fw-semibold">Category</label>
                                 <select class="form-select " id="update-post-category" required>
-                                    <option value="" >Select Category</option>
+                                    <option value="">Select Category</option>
                                     <option value="technology">Technology</option>
                                     <option value="programming">Programming</option>
                                     <option value="lifestyle">Lifestyle</option>
@@ -343,7 +343,8 @@
                                 <input type="file" id="update-post-image-input" accept="image/*" class="d-none">
                                 <div id="update-image-preview" class="d-none mt-3">
                                     <img id="update-preview-img" class="image-preview" alt="Preview">
-                                    <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeImageUpdate()">
+                                    <button type="button" class="btn btn-danger btn-sm mt-2"
+                                        onclick="removeImageUpdate()">
                                         <i class="fas fa-times me-1"></i>Remove Image
                                     </button>
                                 </div>
@@ -368,7 +369,7 @@
     <!-- View Post Modal -->
     <div class="modal fade" id="viewPostModal" tabindex="-1">
         <!-- View post modal load here -->
-         <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title fw-bold" id="viewPostTitle"></h5>
@@ -428,4 +429,5 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
+
 </html>
