@@ -1,5 +1,6 @@
-// Image file functionalities---------------------------------------------------------
-document.addEventListener('DOMContentLoaded', function () {
+// Image file functionalities for save post---------------------------------------------------------
+document.addEventListener('DOMContentLoaded', imageFileFunctionality);
+function imageFileFunctionality() {
     const fileInput = document.getElementById('post-image-input');
     const uploadArea = document.querySelector('.image-upload-area');
     const imagePreview = document.getElementById('image-preview');
@@ -83,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
             reader.readAsDataURL(file);
         }
     }
-});
+}
 
 // Remove image functionality---------------------------------------------------
 
@@ -133,6 +134,7 @@ class CreateAlert {
 //POST DATA to server side-----------------------------------------------------------------------------
 // Function to save post
 function savePost() {
+    // imageFileFunctionality();
     const titleElement = document.getElementById("postTitle");
     const tagElement = document.getElementById("post-tag");
     const contentElement = document.getElementById("postContent");
@@ -302,7 +304,7 @@ function loadPosts() {
                             <button class="btn btn-outline-info btn-sm flex-fill" data-bs-toggle="modal" data-bs-target="#viewPostModal" onclick="viewPost(${dataset.id})">
                                 <i class="fas fa-eye me-1"></i>View
                             </button>
-                            <button class="btn btn-outline-warning btn-sm flex-fill" data-bs-toggle="modal" data-bs-target="#addPostModal" onclick="updatePost(${dataset.id})">
+                            <button class="btn btn-outline-warning btn-sm flex-fill" data-bs-toggle="modal" data-bs-target="#updatePostModal" onclick="updatePost(${dataset.id})">
                                 <i class="fas fa-edit me-1"></i>Update
                             </button>
                             <button class="btn btn-outline-danger btn-sm flex-fill" data-bs-toggle="modal" data-bs-target="#" onclick="deletePost(${dataset.id})">
@@ -353,28 +355,123 @@ function viewPost(id) {
 }
 
 // update post ------------------------------------------------------------------------------------------------
-let updatePostModalContainer = document.getElementById("addPostModal");
-function updatePost(id) {
-
+let updatePostModalContainer = document.getElementById("updatePostModal");
+function updatePost(index) {
+    imageFileFunctionality();
     postListArray.forEach(post => {
-        if (id === post.id) {
-            document.getElementById("postTitle").value = post.title;
-            document.getElementById("postContent").value = post.content;
-            document.getElementById("post-tag").value = post.tag;
-            document.getElementById("post-category").value = post.category;
+        if (index === post.id) {
+            index = post.id; // Store the index for later use
+            console.log(index);
 
-            // Check if image-preview is an <img> or <input>
-            const imagePreview = document.getElementById("preview-img");
-            if (imagePreview) {
-                if (imagePreview.tagName === "IMG") {
-                    imagePreview.src = post.imageUrl;
-                } else {
-                    imagePreview.value = post.imageUrl;
-                }
-            }
+            document.getElementById("update-post-title").value = post.title;
+            document.getElementById("update-post-content").value = post.content;
+            document.getElementById("update-post-tag").value = post.tag;
+            document.getElementById("update-post-category").value = post.category;
+            document.getElementById("update-post-comment").value = post.commentCount;
 
-            document.getElementById("postComments").value = post.commentCount;
+
         }
     });
 
+    const titleElement = document.getElementById("update-post-title");
+    const tagElement = document.getElementById("update-post-tag");
+    const contentElement = document.getElementById("update-post-content");
+    const categoryElement = document.getElementById("update-post-category");
+    const commentsElement = document.getElementById("update-post-comment");
+    const imageFileInput = document.getElementById("update-post-image-input");
+    const imagePreview = document.getElementById("update-image-preview");
+
+    // Check if all required elements exist
+    if (!titleElement || !tagElement || !contentElement || !categoryElement || !commentsElement || !imageFileInput) {
+        console.error('Required form elements not found');
+        CreateAlert.showAlert("Error", "Form elements not found!", "error");
+        return;
+    }
+
+    const title = titleElement.value.trim();
+    const tag = tagElement.value.trim();
+    const content = contentElement.value.trim();
+    const category = categoryElement.value;
+    const comments = commentsElement.value;
+    const imageFile = imageFileInput.files[0];
+
+    let imageUrl = "";
+    if (imageFile) {
+        imageUrl = URL.createObjectURL(imageFile);
+    }
+
+    // Validation
+    if (!title) {
+        CreateAlert.showAlert("Error", "Title is required!", "error");
+        return;
+    } else if (!tag) {
+        CreateAlert.showAlert("Error", "Tag is required!", "error");
+        return;
+    } else if (!content) {
+        CreateAlert.showAlert("Error", "Content is required!", "error");
+        return;
+    } else if (!category) {
+        CreateAlert.showAlert("Error", "Category must be selected!", "error");
+        return;
+    } else if (comments && comments < 0) {
+        CreateAlert.showAlert("Error", "Comments count cannot be negative!", "error");
+        return;
+    }
+    // else if (!imageFile && (!imagePreview || imagePreview.classList.contains('d-none'))) {
+    //     CreateAlert.showAlert("Error", "Image is required!", "error");
+    //     return;
+    // } 
+    else if (imageFile && imageFile.size > 5 * 1024 * 1024) {
+        CreateAlert.showAlert("Error", "Image must be less than 5MB.", "error");
+        return;
+    }
+
+    // Build post data object
+
+    const postData = {
+        "id": index,
+        "title": title,
+        "content": content,
+        "tag": tag,
+        "category": category,
+        "commentCount": parseInt(comments) || 0,
+        "createdAt": null,
+        "updatedAt": null,
+        "imageUrl": null
+    };
+
+    fetch("http://localhost:8080/blogpost/update-post", {
+        method: "PUT",
+        body: JSON.stringify(postData),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    }).then(async res => {
+        if (!res.ok) {
+            const text = await res.text(); // Try to read response text for debugging
+            CreateAlert.showAlert("Error", `HTTP error! ${res.status}: ${text}`, "error");
+            return;
+        }
+
+        try {
+            const finalRes = await res.json();
+            if (finalRes.status === "success") {
+                CreateAlert.showAlert("Success", "Post saved successfully ✅", "success");
+                clearForm();
+            } else {
+                CreateAlert.showAlert("Error", `Failed to save post: ${finalRes.message}`, "error");
+            }
+        } catch (e) {
+            CreateAlert.showAlert("Success", "Post saved successfully ✅", "success");
+            clearForm();
+        }
+    }).catch(err => {
+        console.error("Error:", err);
+        CreateAlert.showAlert("Error", `Failed to save post: ${err.message}`, "error");
+    });
+
 }
+
+// trigger update post functionality
+document.getElementById("update-post-btn").addEventListener("click", updatePost);
+
