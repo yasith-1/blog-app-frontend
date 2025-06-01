@@ -302,10 +302,10 @@ function loadPosts() {
                             <button class="btn btn-outline-info btn-sm flex-fill" data-bs-toggle="modal" data-bs-target="#viewPostModal" onclick="viewPost(${dataset.id})">
                                 <i class="fas fa-eye me-1"></i>View
                             </button>
-                            <button class="btn btn-outline-warning btn-sm flex-fill" onclick="updatePost(${dataset.id})">
+                            <button class="btn btn-outline-warning btn-sm flex-fill" data-bs-toggle="modal" data-bs-target="#addPostModal" onclick="updatePost(${dataset.id})">
                                 <i class="fas fa-edit me-1"></i>Update
                             </button>
-                            <button class="btn btn-outline-danger btn-sm flex-fill" onclick="deletePost(${dataset.id})">
+                            <button class="btn btn-outline-danger btn-sm flex-fill" data-bs-toggle="modal" data-bs-target="#" onclick="deletePost(${dataset.id})">
                                 <i class="fas fa-trash me-1"></i>Delete
                             </button>
                         </div>
@@ -321,6 +321,8 @@ function loadPosts() {
     });
 }
 
+
+// View post ------------------------------------------------------------------------------------------------
 let viewPostModalContainer = document.getElementById("viewPostModal");
 
 // view post function
@@ -348,4 +350,31 @@ function viewPost(id) {
         </div>`;
         }
     })
+}
+
+// update post ------------------------------------------------------------------------------------------------
+let updatePostModalContainer = document.getElementById("addPostModal");
+function updatePost(id) {
+
+    postListArray.forEach(post => {
+        if (id === post.id) {
+            document.getElementById("postTitle").value = post.title;
+            document.getElementById("postContent").value = post.content;
+            document.getElementById("post-tag").value = post.tag;
+            document.getElementById("post-category").value = post.category;
+
+            // Check if image-preview is an <img> or <input>
+            const imagePreview = document.getElementById("preview-img");
+            if (imagePreview) {
+                if (imagePreview.tagName === "IMG") {
+                    imagePreview.src = post.imageUrl;
+                } else {
+                    imagePreview.value = post.imageUrl;
+                }
+            }
+
+            document.getElementById("postComments").value = post.commentCount;
+        }
+    });
+
 }
