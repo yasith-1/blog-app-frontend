@@ -134,7 +134,6 @@ class CreateAlert {
 //POST DATA to server side-----------------------------------------------------------------------------
 // Function to save post
 function savePost() {
-    // imageFileFunctionality();
     const titleElement = document.getElementById("postTitle");
     const tagElement = document.getElementById("post-tag");
     const contentElement = document.getElementById("postContent");
@@ -215,59 +214,74 @@ function savePost() {
         try {
             const finalRes = await res.json();
             if (finalRes.status === "success") {
-                CreateAlert.showAlert("Success", "Post saved successfully ✅", "success");
+                CreateAlert.showAlert("Success", "Post saved successfully!", "success");
                 clearForm();
+                // Reload posts to show the new one
+                // location.reload();
+                return;
             } else {
                 CreateAlert.showAlert("Error", `Failed to save post: ${finalRes.message}`, "error");
             }
         } catch (e) {
-            CreateAlert.showAlert("Success", "Post saved (no JSON response)", "success");
+            CreateAlert.showAlert("Success", "Post saved successfully!", "success");
             clearForm();
+            // location.reload();
         }
     }).catch(err => {
         console.error("Error:", err);
         CreateAlert.showAlert("Error", `Failed to save post: ${err.message}`, "error");
     });
-
 }
 
-document.getElementById("save-post-btn").addEventListener("click", savePost);
+// Add event listener for save post button
+document.addEventListener('DOMContentLoaded', function () {
+    const saveBtn = document.getElementById("save-post-btn");
+    if (saveBtn) {
+        saveBtn.addEventListener("click", savePost);
+    }
+});
 
 // Optional function to clear form after successful save
 function clearForm() {
-    document.getElementById("postTitle").value = '';
-    document.getElementById("post-tag").value = '';
-    document.getElementById("postContent").value = '';
-    document.getElementById("post-category").value = '';
-    document.getElementById("postComments").value = '';
+    const elements = [
+        "postTitle", "post-tag", "postContent", "post-category", "postComments"
+    ];
+
+    elements.forEach(id => {
+        document.getElementById(id).value = "";
+    });
+
     removeImage();
 }
 
-
-
-
-
-
-
 //load blog post to dashboard-----------------------------------------------------------------------------
 
-// Loat data to database
+// Load data from database
 document.addEventListener('DOMContentLoaded', loadPosts);
-
-//postContainer
-const postContainer = document.getElementById("postsContainer");
 
 // Available posts arraylist
 let postListArray = [];
 
 function loadPosts() {
+    // Clear existing posts first
+    postListArray = [];
+    const postContainer = document.getElementById("postsContainer");
+
+    if (!postContainer) {
+        console.error("Posts container not found");
+        return;
+    }
+
     fetch("http://localhost:8080/blogpost/get-all").then(res => {
         return res.json();
     }).then(data => {
         console.log("Data loaded:", data);
 
+        // Clear container first
+        postContainer.innerHTML = '';
+
         if (!Array.isArray(data) || data.length === 0) {
-            postsContainer.innerHTML = `<div class="col-12">
+            postContainer.innerHTML = `<div class="col-12">
                 <div class="card text-center py-5">
                     <div class="card-body">
                         <i class="fas fa-blog fa-4x text-gradient mb-4"></i>
@@ -287,11 +301,11 @@ function loadPosts() {
                 postContainer.innerHTML += `<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
                 <div class="card blog-card h-100">
                     <img src="${dataset.imageUrl}"
-                        class="blog-card-img" alt="Business Analytics">
+                        class="blog-card-img" alt="Blog Image">
                     <div class="card-body">
                         <div class="blog-meta">
                             <span class="category-badge">${dataset.category}</span>
-                            <small><i class="fas fa-calendar me-1"></i>${dataset.createdAt}</small>
+                            <small><i class="fas fa-calendar me-1"></i>${dataset.createdAt || 'No date'}</small>
                         </div>
                         <h5 class="card-title">${dataset.title}</h5>
                         <p class="card-text">${dataset.content}</p>
@@ -307,7 +321,7 @@ function loadPosts() {
                             <button class="btn btn-outline-warning btn-sm flex-fill" data-bs-toggle="modal" data-bs-target="#updatePostModal" onclick="updatePost(${dataset.id})">
                                 <i class="fas fa-edit me-1"></i>Update
                             </button>
-                            <button class="btn btn-outline-danger btn-sm flex-fill" data-bs-toggle="modal" data-bs-target="#" onclick="deletePost(${dataset.id})">
+                            <button class="btn btn-outline-danger btn-sm flex-fill" onclick="deletePost(${dataset.id})">
                                 <i class="fas fa-trash me-1"></i>Delete
                             </button>
                         </div>
@@ -316,73 +330,140 @@ function loadPosts() {
             </div>`;
             });
         }
-
-
     }).catch(err => {
+        console.error("Load error:", err);
         CreateAlert.showAlert("Error", "Failed to load data from server.", "error");
     });
 }
 
-
 // View post ------------------------------------------------------------------------------------------------
-let viewPostModalContainer = document.getElementById("viewPostModal");
-
-// view post function
 function viewPost(id) {
-    postListArray.forEach(post => {
-        if (post.id === id) {
-            viewPostModalContainer.innerHTML = `<div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header ">
-                    <h5 class="modal-title fw-bold" id="viewPostTitle">${post.title}</h5>
+    const viewPostModalContainer = document.getElementById("viewPostModal");
+    if (!viewPostModalContainer) {
+        console.error("View post modal container not found");
+        return;
+    }
 
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="viewPostImage" class="d-block text-center mb-4">
-                        <img id="viewPostImageElement" src="${post.imageUrl}"  class="modal-image" alt="Post Image">
-                    </div>
-                    <small><i class="fas fa-comments me-1"></i> ${post.commentCount} comments &nbsp | &nbsp  <i class="fas fa-clock me-1"></i>  ${post.createdAt}</small>
-                    <div class="blog-content mt-2 fs-5" id="viewPostContent">${post.content}</div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Close</button>
-                </div>
+    const post = postListArray.find(post => post.id === id);
+    if (!post) {
+        console.error("Post not found with id:", id);
+        return;
+    }
+
+    viewPostModalContainer.innerHTML = `<div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="viewPostTitle">${post.title}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-        </div>`;
-        }
-    })
+            <div class="modal-body">
+                <div id="viewPostImage" class="d-block text-center mb-4">
+                    <img id="viewPostImageElement" src="${post.imageUrl}" class="modal-image" alt="Post Image">
+                </div>
+                <small><i class="fas fa-comments me-1"></i> ${post.commentCount} comments &nbsp | &nbsp <i class="fas fa-clock me-1"></i> ${post.createdAt || 'No date'}</small>
+                <div class="blog-content mt-2 fs-5" id="viewPostContent">${post.content}</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>`;
 }
 
-// update post ------------------------------------------------------------------------------------------------
-let updatePostModalContainer = document.getElementById("updatePostModal");
-function updatePost(index) {
-    imageFileFunctionality();
-    postListArray.forEach(post => {
-        if (index === post.id) {
-            index = post.id; // Store the index for later use
-            console.log(index);
+// Update post ------------------------------------------------------------------------------------------------
+function updatePost(id) {
+    const post = postListArray.find(post => post.id === id);
+    if (!post) {
+        console.error("Post not found with id:", id);
+        return;
+    }
 
-            document.getElementById("update-post-title").value = post.title;
-            document.getElementById("update-post-content").value = post.content;
-            document.getElementById("update-post-tag").value = post.tag;
-            document.getElementById("update-post-category").value = post.category;
-            document.getElementById("update-post-comment").value = post.commentCount;
+    // Initialize image functionality for update modal
+    initializeUpdateImageFunctionality();
 
+    // Populate form fields
+    const titleElement = document.getElementById("update-post-title");
+    const tagElement = document.getElementById("update-post-tag");
+    const contentElement = document.getElementById("update-post-content");
+    const categoryElement = document.getElementById("update-post-category");
+    const commentsElement = document.getElementById("update-post-comment");
 
+    if (titleElement) titleElement.value = post.title;
+    if (tagElement) tagElement.value = post.tag;
+    if (contentElement) contentElement.value = post.content;
+    if (categoryElement) categoryElement.value = post.category;
+    if (commentsElement) commentsElement.value = post.commentCount;
+
+    // Store the post ID for the update function
+    window.currentUpdatePostId = id;
+}
+
+// Initialize image functionality for update modal
+function initializeUpdateImageFunctionality() {
+    const fileInput = document.getElementById('update-post-image-input');
+    const uploadArea = document.querySelector('.update-image-upload-area');
+    const imagePreview = document.getElementById('update-image-preview');
+    const previewImg = document.getElementById('update-preview-img');
+
+    if (!fileInput || !uploadArea || !imagePreview || !previewImg) {
+        console.log('Update image elements not found - may not be needed');
+        return;
+    }
+
+    // Remove existing listeners to prevent duplicates
+    fileInput.removeEventListener('change', handleUpdateFileSelect);
+    uploadArea.removeEventListener('click', handleUpdateUploadClick);
+
+    // Add event listeners
+    fileInput.addEventListener('change', handleUpdateFileSelect);
+    uploadArea.addEventListener('click', handleUpdateUploadClick);
+
+    function handleUpdateUploadClick(e) {
+        e.preventDefault();
+        fileInput.click();
+    }
+
+    function handleUpdateFileSelect(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate file type
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+            if (!validTypes.includes(file.type)) {
+                alert('Please select a valid image file (JPG, PNG, GIF)');
+                fileInput.value = '';
+                return;
+            }
+
+            // Validate file size (5MB)
+            const maxSize = 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert('File size must be less than 5MB');
+                fileInput.value = '';
+                return;
+            }
+
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                previewImg.src = e.target.result;
+                imagePreview.classList.remove('d-none');
+            };
+            reader.readAsDataURL(file);
         }
-    });
+    }
+}
 
+// Function to handle update post submission
+function submitUpdatePost() {
     const titleElement = document.getElementById("update-post-title");
     const tagElement = document.getElementById("update-post-tag");
     const contentElement = document.getElementById("update-post-content");
     const categoryElement = document.getElementById("update-post-category");
     const commentsElement = document.getElementById("update-post-comment");
     const imageFileInput = document.getElementById("update-post-image-input");
-    const imagePreview = document.getElementById("update-image-preview");
 
     // Check if all required elements exist
-    if (!titleElement || !tagElement || !contentElement || !categoryElement || !commentsElement || !imageFileInput) {
+    if (!titleElement || !tagElement || !contentElement || !categoryElement || !commentsElement) {
         console.error('Required form elements not found');
         CreateAlert.showAlert("Error", "Form elements not found!", "error");
         return;
@@ -393,12 +474,7 @@ function updatePost(index) {
     const content = contentElement.value.trim();
     const category = categoryElement.value;
     const comments = commentsElement.value;
-    const imageFile = imageFileInput.files[0];
-
-    let imageUrl = "";
-    if (imageFile) {
-        imageUrl = URL.createObjectURL(imageFile);
-    }
+    const imageFile = imageFileInput ? imageFileInput.files[0] : null;
 
     // Validation
     if (!title) {
@@ -416,20 +492,14 @@ function updatePost(index) {
     } else if (comments && comments < 0) {
         CreateAlert.showAlert("Error", "Comments count cannot be negative!", "error");
         return;
-    }
-    // else if (!imageFile && (!imagePreview || imagePreview.classList.contains('d-none'))) {
-    //     CreateAlert.showAlert("Error", "Image is required!", "error");
-    //     return;
-    // } 
-    else if (imageFile && imageFile.size > 5 * 1024 * 1024) {
+    } else if (imageFile && imageFile.size > 5 * 1024 * 1024) {
         CreateAlert.showAlert("Error", "Image must be less than 5MB.", "error");
         return;
     }
 
     // Build post data object
-
     const postData = {
-        "id": index,
+        "id": window.currentUpdatePostId,
         "title": title,
         "content": content,
         "tag": tag,
@@ -437,7 +507,7 @@ function updatePost(index) {
         "commentCount": parseInt(comments) || 0,
         "createdAt": null,
         "updatedAt": null,
-        "imageUrl": null
+        "imageUrl": imageFile ? URL.createObjectURL(imageFile) : null
     };
 
     fetch("http://localhost:8080/blogpost/update-post", {
@@ -448,7 +518,7 @@ function updatePost(index) {
         },
     }).then(async res => {
         if (!res.ok) {
-            const text = await res.text(); // Try to read response text for debugging
+            const text = await res.text();
             CreateAlert.showAlert("Error", `HTTP error! ${res.status}: ${text}`, "error");
             return;
         }
@@ -456,22 +526,80 @@ function updatePost(index) {
         try {
             const finalRes = await res.json();
             if (finalRes.status === "success") {
-                CreateAlert.showAlert("Success", "Post saved successfully ✅", "success");
-                clearForm();
+                CreateAlert.showAlert("Success", "Post updated successfully!", "success");
+                clearUpdateForm();
+                location.reload();
             } else {
-                CreateAlert.showAlert("Error", `Failed to save post: ${finalRes.message}`, "error");
+                CreateAlert.showAlert("Error", `Failed to update post: ${finalRes.message}`, "error");
             }
         } catch (e) {
-            CreateAlert.showAlert("Success", "Post saved successfully ✅", "success");
-            clearForm();
+            CreateAlert.showAlert("Success", "Post updated successfully!", "success");
+            clearUpdateForm();
+            location.reload();
         }
     }).catch(err => {
         console.error("Error:", err);
-        CreateAlert.showAlert("Error", `Failed to save post: ${err.message}`, "error");
+        CreateAlert.showAlert("Error", `Failed to update post: ${err.message}`, "error");
     });
-
 }
 
-// trigger update post functionality
-document.getElementById("update-post-btn").addEventListener("click", updatePost);
+// Clear update form
+function clearUpdateForm() {
+    const elements = [
+        "update-post-title", "update-post-tag", "update-post-content",
+        "update-post-category", "update-post-comment"
+    ];
 
+    elements.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.value = '';
+    });
+
+    const imageInput = document.getElementById("update-post-image-input");
+    if (imageInput) imageInput.value = '';
+
+    const imagePreview = document.getElementById("update-image-preview");
+    if (imagePreview) imagePreview.classList.add('d-none');
+}
+
+// Add event listener for update post button
+document.addEventListener('DOMContentLoaded', function () {
+    const updateBtn = document.getElementById("update-post-btn");
+    if (updateBtn) {
+        updateBtn.addEventListener("click", submitUpdatePost);
+    }
+});
+
+// Delete post function
+function deletePost(id) {
+    if (confirm("Are you sure you want to delete this post?")) {
+        fetch(`http://localhost:8080/blogpost/delete-post/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then(async res => {
+            if (!res.ok) {
+                const text = await res.text();
+                CreateAlert.showAlert("Error", `HTTP error! ${res.status}: ${text}`, "error");
+                return;
+            }
+
+            try {
+                const finalRes = await res.json();
+                if (finalRes.status === "success") {
+                    CreateAlert.showAlert("Success", "Post deleted successfully!", "success");
+                    location.reload();
+                } else {
+                    CreateAlert.showAlert("Error", `Failed to delete post: ${finalRes.message}`, "error");
+                }
+            } catch (e) {
+                CreateAlert.showAlert("Success", "Post deleted successfully!", "success");
+                location.reload();
+            }
+        }).catch(err => {
+            console.error("Error:", err);
+            CreateAlert.showAlert("Error", `Failed to delete post: ${err.message}`, "error");
+        });
+    }
+}
