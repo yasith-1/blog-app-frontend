@@ -1,4 +1,4 @@
-// Image upload functionality
+// Image file functionalities---------------------------------------------------------
 document.addEventListener('DOMContentLoaded', function () {
     const fileInput = document.getElementById('post-image-input');
     const uploadArea = document.querySelector('.image-upload-area');
@@ -85,6 +85,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+// Remove image functionality---------------------------------------------------
+
 function removeImage() {
     const fileInput = document.getElementById('post-image-input');
     const imagePreview = document.getElementById('image-preview');
@@ -111,6 +113,7 @@ function removeImage() {
     `;
 }
 
+// Custom alert class---------------------------------------------------------
 class CreateAlert {
     static showAlert(title, text, type) {
         // Check if SweetAlert2 is available
@@ -127,6 +130,7 @@ class CreateAlert {
     }
 }
 
+//POST DATA to server side-----------------------------------------------------------------------------
 // Function to save post
 function savePost() {
     const titleElement = document.getElementById("postTitle");
@@ -193,38 +197,36 @@ function savePost() {
         "imageUrl": imageUrl
     };
 
-    // If you need to send the actual file to the server, use FormData instead:
-    // const formData = new FormData();
-    // formData.append('title', title);
-    // formData.append('content', content);
-    // formData.append('tag', tag);
-    // formData.append('category', category);
-    // formData.append('commentCount', parseInt(comments) || 0);
-    // if (imageFile) {
-    //     formData.append('image', imageFile);
-    // }
-
     fetch("http://localhost:8080/blogpost/add-post", {
         method: "POST",
         body: JSON.stringify(postData),
         headers: {
             "Content-Type": "application/json",
         },
-    }).then(res => {
+    }).then(async res => {
         if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
+            const text = await res.text(); // Try to read response text for debugging
+            CreateAlert.showAlert("Error", `HTTP error! ${res.status}: ${text}`, "error");
+            return;
         }
-        return res.json();
-    }).then(finalRes => {
-        console.log("Server Response:", finalRes);
-        CreateAlert.showAlert("Success", "Post saved successfully!", "success");
 
-        // Optionally clear the form after successful save
-        clearForm();
+        try {
+            const finalRes = await res.json();
+            if (finalRes.status === "success") {
+                CreateAlert.showAlert("Success", "Post saved successfully ✅", "success");
+                clearForm();
+            } else {
+                CreateAlert.showAlert("Error", `Failed to save post: ${finalRes.message}`, "error");
+            }
+        } catch (e) {
+            CreateAlert.showAlert("Success", "Post saved (no JSON response)", "success");
+            clearForm();
+        }
     }).catch(err => {
         console.error("Error:", err);
         CreateAlert.showAlert("Error", `Failed to save post: ${err.message}`, "error");
     });
+
 }
 
 document.getElementById("save-post-btn").addEventListener("click", savePost);
@@ -238,6 +240,17 @@ function clearForm() {
     document.getElementById("postComments").value = '';
     removeImage();
 }
+
+
+
+
+
+
+
+//load blog post to dashboard-----------------------------------------------------------------------------
+
+// Loat data to database
+document.addEventListener('DOMContentLoaded', loadPosts);
 
 //postContainer
 const postContainer = document.getElementById("postsContainer");
@@ -280,13 +293,13 @@ function loadPosts() {
                     </div>
                     <div class="card-footer">
                         <div class="d-flex justify-content-between gap-2">
-                            <button class="btn btn-outline-info btn-sm flex-fill" onclick="viewPost(4)">
+                            <button class="btn btn-outline-info btn-sm flex-fill" onclick="viewPost(${dataset.id})">
                                 <i class="fas fa-eye me-1"></i>View
                             </button>
-                            <button class="btn btn-outline-warning btn-sm flex-fill" onclick="updatePost(4)">
+                            <button class="btn btn-outline-warning btn-sm flex-fill" onclick="updatePost(${dataset.id})">
                                 <i class="fas fa-edit me-1"></i>Update
                             </button>
-                            <button class="btn btn-outline-danger btn-sm flex-fill" onclick="deletePost(4)">
+                            <button class="btn btn-outline-danger btn-sm flex-fill" onclick="deletePost(${dataset.id})">
                                 <i class="fas fa-trash me-1"></i>Delete
                             </button>
                         </div>
@@ -298,10 +311,8 @@ function loadPosts() {
 
 
     }).catch(err => {
-        console.error("Error loading data:", err);
         CreateAlert.showAlert("Error", "Failed to load data from server.", "error");
     });
 }
 
-// Loat data to database
-document.addEventListener('DOMContentLoaded', loadPosts);
+
