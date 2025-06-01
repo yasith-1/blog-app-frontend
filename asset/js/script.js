@@ -255,6 +255,9 @@ document.addEventListener('DOMContentLoaded', loadPosts);
 //postContainer
 const postContainer = document.getElementById("postsContainer");
 
+// Available posts arraylist
+let postListArray = [];
+
 function loadPosts() {
     fetch("http://localhost:8080/blogpost/get-all").then(res => {
         return res.json();
@@ -276,6 +279,9 @@ function loadPosts() {
             </div>`;
         } else {
             data.forEach(dataset => {
+                // Add each post to the postListArray
+                postListArray.push(dataset);
+
                 postContainer.innerHTML += `<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
                 <div class="card blog-card h-100">
                     <img src="${dataset.imageUrl}"
@@ -293,7 +299,7 @@ function loadPosts() {
                     </div>
                     <div class="card-footer">
                         <div class="d-flex justify-content-between gap-2">
-                            <button class="btn btn-outline-info btn-sm flex-fill" onclick="viewPost(${dataset.id})">
+                            <button class="btn btn-outline-info btn-sm flex-fill" data-bs-toggle="modal" data-bs-target="#viewPostModal" onclick="viewPost(${dataset.id})">
                                 <i class="fas fa-eye me-1"></i>View
                             </button>
                             <button class="btn btn-outline-warning btn-sm flex-fill" onclick="updatePost(${dataset.id})">
@@ -315,4 +321,31 @@ function loadPosts() {
     });
 }
 
+let viewPostModalContainer = document.getElementById("viewPostModal");
 
+// view post function
+function viewPost(id) {
+    postListArray.forEach(post => {
+        if (post.id === id) {
+            viewPostModalContainer.innerHTML = `<div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <h5 class="modal-title fw-bold" id="viewPostTitle">${post.title}</h5>
+
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="viewPostImage" class="d-block text-center mb-4">
+                        <img id="viewPostImageElement" src="${post.imageUrl}"  class="modal-image" alt="Post Image">
+                    </div>
+                    <small><i class="fas fa-comments me-1"></i> ${post.commentCount} comments &nbsp | &nbsp  <i class="fas fa-clock me-1"></i>  ${post.createdAt}</small>
+                    <div class="blog-content mt-2 fs-5" id="viewPostContent">${post.content}</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>`;
+        }
+    })
+}
